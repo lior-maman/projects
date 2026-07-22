@@ -1,0 +1,820 @@
+<! DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Onboarding ללקוחות קיימים — צוות שירות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-1: #eef5fc;
+    --bg-2: #e3eefb;
+    --bg-3: #dbe9f8;
+    --grid: rgba(37,99,180,0.05);
+    --topbar-bg: rgba(240,247,253,0.8);
+    --topbar-border: rgba(37,99,180,0.14);
+    --brand-icon-bg: rgba(56,132,224,0.12);
+    --brand-icon-border: rgba(56,132,224,0.4);
+    --brand-label: rgba(40,70,110,0.85);
+    --counter: rgba(60,90,130,0.5);
+    --card-bg: rgba(255,255,255,0.9);
+    --card-border: rgba(56,132,224,0.2);
+    --card-shadow: 0 18px 50px rgba(30,80,160,0.12), 0 1px 0 rgba(255,255,255,0.7) inset;
+    --tag-bg: rgba(56,132,224,0.1);
+    --tag-border: rgba(56,132,224,0.32);
+    --tag-text: rgba(30,95,190,0.95);
+    --accent: #3884e0;          /* כחול */
+    --accent-strong: #1f5fbe;
+    --accent-light: #7fb4ee;    /* תכלת */
+    --accent-soft: rgba(56,132,224,0.12);
+    --sky-soft: rgba(127,180,238,0.18);
+    --title: rgba(22,42,72,0.97);
+    --body: rgba(52,70,96,0.9);
+    --point-text: rgba(44,62,88,0.94);
+    --divider: rgba(37,99,180,0.12);
+    --dot-active: rgba(56,132,224,0.95);
+    --dot-done: rgba(56,132,224,0.5);
+    --dot-todo: rgba(60,90,130,0.2);
+    --btn-next-bg: #3884e0;
+    --btn-next-text: #ffffff;
+    --btn-next-glow: rgba(56,132,224,0.32);
+    --btn-back-bg: rgba(56,132,224,0.1);
+    --btn-back-border: rgba(56,132,224,0.26);
+    --btn-back-text: rgba(40,70,110,0.9);
+    --opt-bg: rgba(56,132,224,0.06);
+    --opt-border: rgba(56,132,224,0.22);
+    --opt-hover: rgba(56,132,224,0.13);
+    --opt-text: rgba(32,50,78,0.94);
+    --marker-border: rgba(56,132,224,0.45);
+    --marker-text: rgba(50,90,150,0.85);
+    --correct-bg: rgba(52,160,120,0.13);
+    --correct-border: rgba(52,160,120,0.6);
+    --correct-text: rgba(30,130,95,0.95);
+    --wrong-bg: rgba(224,120,90,0.12);
+    --wrong-border: rgba(224,120,90,0.55);
+    --wrong-text: rgba(200,90,60,0.95);
+    --fb-bg: rgba(56,132,224,0.08);
+    --fb-border: rgba(56,132,224,0.3);
+    --fb-text: rgba(40,62,92,0.95);
+    --end-note: rgba(56,132,224,0.6);
+    --visual-glow: rgba(56,132,224,0.22);
+    --bubble-customer-bg: rgba(127,180,238,0.16);
+    --bubble-customer-border: rgba(127,180,238,0.4);
+  }
+
+  html, body {
+    width: 100%; height: 100%; min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Rubik', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(155deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+    color: var(--body);
+    user-select: none;
+    direction: rtl;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  .topbar {
+    position: absolute; top: 0; right: 0; left: 0;
+    height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--topbar-border);
+    background: var(--topbar-bg);
+  }
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+
+  .brand-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--brand-icon-bg);
+    border: 1px solid var(--brand-icon-border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-icon svg { width: 20px; height: 20px; }
+
+  .brand-label { font-size: 14px; font-weight: 600; letter-spacing: 0.02em; color: var(--brand-label); }
+  .slide-counter { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--counter); direction: ltr; }
+
+  .stage {
+    position: absolute; top: 72px; right: 0; left: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; overflow-y: auto;
+  }
+
+  .card {
+    width: 100%; max-width: 960px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 40px 48px;
+    box-shadow: var(--card-shadow);
+    display: none; flex-direction: column; gap: 28px;
+    animation: fadeIn 0.25s ease;
+  }
+  .card.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tag {
+    align-self: flex-start;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+    padding: 6px 18px; border-radius: 100px;
+    background: var(--tag-bg); border: 1px solid var(--tag-border); color: var(--tag-text);
+  }
+
+  .hero-row { display: flex; align-items: center; gap: 36px; }
+
+  .visual {
+    width: 120px; height: 120px; flex-shrink: 0;
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .visual::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle, var(--visual-glow) 0%, transparent 70%);
+  }
+  .visual svg { width: 76px; height: 76px; position: relative; z-index: 1; }
+
+  .slide-title { font-size: 30px; font-weight: 700; line-height: 1.3; color: var(--title); }
+  .slide-body { font-size: 17px; line-height: 1.85; color: var(--body); }
+
+  .points { display: flex; flex-direction: column; gap: 12px; }
+  .point { display: flex; align-items: flex-start; gap: 14px; }
+  .point-dot { margin-top: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .point-text { font-size: 16px; color: var(--point-text); line-height: 1.6; }
+
+  /* אינפוגרפיקה — שלבי התהליך */
+  .flow { display: flex; align-items: stretch; gap: 10px; }
+  .flow-step {
+    flex: 1; position: relative;
+    background: var(--accent-soft);
+    border: 1px solid var(--opt-border);
+    border-radius: 14px; padding: 18px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+  }
+  .flow-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
+  }
+  .flow-name { font-size: 15px; font-weight: 600; color: var(--title); }
+  .flow-desc { font-size: 12.5px; line-height: 1.5; color: var(--body); }
+  .flow-arrow { align-self: center; color: var(--accent-light); font-size: 22px; flex-shrink: 0; }
+  .flow-arrow svg { width: 22px; height: 22px; transform: scaleX(-1); }
+
+  /* רשימת תיוג */
+  .checklist { display: flex; flex-direction: column; gap: 10px; }
+  .check-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; border-radius: 12px;
+    background: var(--opt-bg); border: 1px solid var(--opt-border);
+    cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    color: var(--opt-text); font-size: 15.5px; text-align: right; font-family: inherit;
+  }
+  .check-item:hover { background: var(--opt-hover); }
+  .check-box {
+    width: 24px; height: 24px; flex-shrink: 0; border-radius: 7px;
+    border: 1.5px solid var(--marker-border);
+    display: flex; align-items: center; justify-content: center;
+    color: transparent; transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .check-box svg { width: 15px; height: 15px; }
+  .check-item.checked { background: var(--correct-bg); border-color: var(--correct-border); }
+  .check-item.checked .check-box { background: var(--correct-text); border-color: var(--correct-text); color: #fff; }
+  .check-progress { font-size: 13.5px; color: var(--counter); margin-top: 2px; }
+
+  .divider { height: 1px; background: var(--divider); }
+  .nav-row { display: flex; align-items: center; justify-content: space-between; }
+  .dots { display: flex; align-items: center; gap: 8px; }
+  .dot { height: 6px; border-radius: 3px; transition: width 0.3s ease, background 0.3s ease; }
+  .btn-group { display: flex; gap: 12px; }
+
+  button {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; outline: none;
+    transition: opacity 0.15s, box-shadow 0.15s, background 0.15s, filter 0.15s;
+    font-family: inherit;
+  }
+  button svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .btn-back { background: var(--btn-back-bg); border: 1px solid var(--btn-back-border); color: var(--btn-back-text); }
+  .btn-back:hover:not(:disabled) { filter: brightness(0.97); }
+  .btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn-next { background: var(--btn-next-bg); border: 1px solid var(--accent); color: var(--btn-next-text); box-shadow: 0 0 20px var(--btn-next-glow); }
+  .btn-next:hover:not(:disabled) { filter: brightness(1.06); box-shadow: 0 0 28px var(--btn-next-glow); }
+  .btn-next:disabled { background: var(--accent-soft); border-color: var(--opt-border); color: var(--counter); box-shadow: none; cursor: not-allowed; }
+
+  .btn-next svg, .btn-back svg { transform: scaleX(-1); }
+
+  /* סימולציית שיחה */
+  .chat { display: flex; flex-direction: column; gap: 14px; }
+  .bubble {
+    max-width: 82%; padding: 14px 18px; border-radius: 16px; font-size: 16px; line-height: 1.55;
+    animation: fadeIn 0.3s ease;
+  }
+  .bubble-customer {
+    align-self: flex-start;
+    background: var(--bubble-customer-bg);
+    border: 1px solid var(--bubble-customer-border);
+    border-top-right-radius: 4px;
+    color: var(--title);
+  }
+  .bubble-label { font-size: 12px; font-weight: 600; color: var(--counter); margin-bottom: 5px; }
+
+  .sim-options { display: flex; flex-direction: column; gap: 12px; }
+  .sim-option {
+    display: flex; align-items: center; gap: 14px;
+    padding: 15px 20px; border-radius: 12px;
+    background: var(--opt-bg); border: 1px solid var(--opt-border);
+    color: var(--opt-text); font-size: 15.5px; font-family: inherit; text-align: right;
+    cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  }
+  .sim-option:hover:not(:disabled) { background: var(--opt-hover); border-color: var(--marker-border); }
+  .sim-option:disabled { cursor: default; }
+  .sim-option.dimmed { opacity: 0.4; }
+  .sim-option.chosen { border-color: var(--accent); background: var(--accent-soft); }
+  .sim-marker {
+    width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%;
+    border: 1.5px solid var(--marker-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: var(--marker-text);
+  }
+
+  .sim-feedback {
+    font-size: 15px; line-height: 1.6; padding: 14px 18px; border-radius: 10px;
+    color: var(--fb-text); background: var(--fb-bg); border: 1px solid var(--fb-border);
+    display: none; animation: fadeIn 0.3s ease;
+  }
+  .sim-feedback.visible { display: block; }
+  .sim-feedback.good { background: var(--correct-bg); border-color: var(--correct-border); }
+  .sim-feedback.warn { background: var(--wrong-bg); border-color: var(--wrong-border); }
+
+  .step-hidden { display: none; }
+
+  .end-note {
+    position: absolute; bottom: 32px; right: 50%; transform: translateX(50%);
+    font-size: 14px; color: var(--end-note); letter-spacing: 0.02em; opacity: 0; transition: opacity 0.4s;
+  }
+  .end-note.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-right">
+    <div class="brand-icon">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M10 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8ZM3 18c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <span class="brand-label">Onboarding ללקוחות קיימים · צוות שירות</span>
+  </div>
+  <span class="slide-counter" id="counter">1 / 9</span>
+</div>
+
+<div class="stage">
+
+  <!-- שקופית 1 — מבוא -->
+  <div class="card active" id="slide-0">
+    <div class="tag">מבוא</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <path d="M18 22h44a4 4 0 0 1 4 4v22a4 4 0 0 1-4 4H34l-12 9V52h-4a4 4 0 0 1-4-4V26a4 4 0 0 1 4-4Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M30 36h20M30 44h12" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">Onboarding שמתחיל אחרי המכירה</h1>
+    </div>
+    <p class="slide-body">לקוח קיים שעובר onboarding טוב נשאר לקוח לאורך זמן. התהליך הזה הוא לא "עוד תמיכה" — הוא הרגע שבו הלקוח מחליט אם הוא סומך עלינו. המודול הזה עובר על תהליך ה-Onboarding שלנו, נותן לך רשימת תיוג מעשית, ומסתיים בסימולציית שיחה אמיתית עם לקוח.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">אינפוגרפיקה של ארבעת שלבי התהליך</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">רשימת תיוג אינטראקטיבית לשיחת הפתיחה</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">סימולציית שיחה מסתעפת — ההחלטות שלך משנות את התגובה</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-0"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)" disabled>
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 2 — אינפוגרפיקה: שלבי התהליך -->
+  <div class="card" id="slide-1">
+    <div class="tag">מפת התהליך</div>
+    <h1 class="slide-title">ארבעת שלבי ה-Onboarding</h1>
+    <p class="slide-body">כל לקוח עובר את אותם ארבעה שלבים. התפקיד שלנו הוא לוודא שאף שלב לא מדולג — כי דילוג על שלב מוקדם צף בהמשך כתקלה או כתסכול.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-name">שיחת פתיחה</div>
+        <div class="flow-desc">הכרת הלקוח, מיפוי צרכים וציפיות, תיאום יעדים</div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-name">הגדרה (Setup)</div>
+        <div class="flow-desc">הקמת החשבון, הגדרות, חיבור מערכות ונתונים</div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-name">הדרכה</div>
+        <div class="flow-desc">הדרכה מעשית, וידוא שהלקוח יודע לבצע לבד</div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-name">מעקב 30 יום</div>
+        <div class="flow-desc">שיחת מעקב, איתור חסמים, סגירת התהליך</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-1"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 3 — שלב 1: שיחת פתיחה -->
+  <div class="card" id="slide-2">
+    <div class="tag">שלב 1 · שיחת פתיחה</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <path d="M16 24h32a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H28l-9 7V46h-3a4 4 0 0 1-4-4V28a4 4 0 0 1 4-4Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="60" cy="46" r="12" fill="var(--sky-soft)" stroke="var(--accent-light)" stroke-width="1.6"/>
+          <path d="M55 46l3.5 3.5 6-7" stroke="var(--accent-strong)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">שיחת הפתיחה קובעת את הטון</h1>
+    </div>
+    <p class="slide-body">המטרה בשיחה הראשונה היא לא טכנית — היא להבין מה הלקוח באמת רוצה להשיג ולתאם ציפיות. לקוח שמרגיש שהקשבנו לו כבר בהתחלה, יסלח בהמשך על תקלות קטנות.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">שאל מה הלקוח מנסה להשיג — לא רק אילו פיצ'רים הוא צריך</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">תאם ציפיות על לוחות זמנים ומי אחראי למה</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">סכם בכתב — שלח מייל קצר עם מה שסוכם ומה הצעד הבא</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-2"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 4 — רשימת תיוג אינטראקטיבית -->
+  <div class="card" id="slide-3">
+    <div class="tag">רשימת תיוג · שיחת פתיחה</div>
+    <h1 class="slide-title">מה חייב לקרות בשיחת הפתיחה?</h1>
+    <p class="slide-body">סמן כל פריט שאתה מבצע בשיחה הראשונה. זו הרשימה שתלווה אותך בכל onboarding.</p>
+    <div class="checklist" id="checklist">
+      <button class="check-item" onclick="toggleCheck(this)"><span class="check-box"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>הצגה עצמית ותיאום מטרת השיחה</span></button>
+      <button class="check-item" onclick="toggleCheck(this)"><span class="check-box"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>בירור מה הלקוח רוצה להשיג (המטרה העסקית)</span></button>
+      <button class="check-item" onclick="toggleCheck(this)"><span class="check-box"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>תיאום ציפיות על לוחות זמנים ואחריות</span></button>
+      <button class="check-item" onclick="toggleCheck(this)"><span class="check-box"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>קביעת הצעד הבא ותאריך יעד</span></button>
+      <button class="check-item" onclick="toggleCheck(this)"><span class="check-box"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>שליחת סיכום בכתב תוך 24 שעות</span></button>
+    </div>
+    <div class="check-progress" id="check-progress">0 מתוך 5 סומנו</div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-3"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 5 — שלבים 2-4 בקצרה -->
+  <div class="card" id="slide-4">
+    <div class="tag">שלבים 2–4</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <rect x="18" y="16" width="44" height="48" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M27 28l3 3 5-6M27 42l3 3 5-6M27 56l3 3 5-6" stroke="var(--accent-strong)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M43 29h12M43 43h12M43 57h10" stroke="var(--accent-light)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">מהגדרה ועד סגירת התהליך</h1>
+    </div>
+    <p class="slide-body">אחרי שיחת הפתיחה, שלושת השלבים הבאים הופכים את ההבטחה למציאות. כל שלב מסתיים בנקודת אימות — לא ממשיכים הלאה עד שהלקוח באמת מוכן.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text"><strong>הגדרה:</strong> הקמה מלאה. אמת שהכול עובד לפני שממשיכים להדרכה</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text"><strong>הדרכה:</strong> תן ללקוח לבצע בעצמו תוך כדי — לא רק להראות לו</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text"><strong>מעקב 30 יום:</strong> שיחה יזומה. אל תחכה שהלקוח יפנה עם בעיה</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-4"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 6 — לפני הסימולציה -->
+  <div class="card" id="slide-5">
+    <div class="tag">לפני התרגול</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <path d="M14 22h34a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H26l-8 6V44h-4a4 4 0 0 1-4-4V26a4 4 0 0 1 4-4Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M40 40h26a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4h-2v5l-7-5H44a4 4 0 0 1-4-4" fill="var(--sky-soft)" stroke="var(--accent-light)" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">עכשיו — שיחה אמיתית עם לקוח</h1>
+    </div>
+    <p class="slide-body">בשתי השקופיות הבאות תנהל שיחה עם לקוח קיים שעובר onboarding. כל תגובה שתבחר תשנה את מה שהלקוח אומר בהמשך — בדיוק כמו בשיחה אמיתית. אין תשובה "מושלמת" אחת; יש בחירות טובות יותר ופחות.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">קרא את הודעת הלקוח, ובחר איך אתה מגיב</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">הלקוח יגיב לפי הבחירה שלך — ותקבל שאלת המשך</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">בסוף כל תרחיש תקבל משוב קצר על הגישה</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-5"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 7 — סימולציה 1 -->
+  <div class="card" id="slide-6">
+    <div class="tag">סימולציה · לקוח מוצף</div>
+    <h1 class="slide-title">שיחה עם לקוח בשלב ההדרכה</h1>
+
+    <div class="chat">
+      <div class="bubble bubble-customer">
+        <div class="bubble-label">הלקוח · רונית, מנהלת תפעול</div>
+        זה נראה לי ממש מסובך. אני לא בטוחה שהצוות שלי יצליח לעבוד עם זה, ואין לנו זמן להדרכות ארוכות.
+      </div>
+    </div>
+
+    <div class="sim-step" data-step="1">
+      <div class="sim-options">
+        <button class="sim-option" data-branch="A" onclick="simStep1(this, 6)">
+          <span class="sim-marker">א</span>
+          <span>"זה לא מסובך, רק צריך להתרגל. אשלח לך מדריך והכול יסתדר."</span>
+        </button>
+        <button class="sim-option" data-branch="B" onclick="simStep1(this, 6)">
+          <span class="sim-marker">ב</span>
+          <span>"אני שומע שזה מרגיש מציף. בואי נתמקד רק בשלושת הדברים שהצוות שלך צריך יום-יום — השאר יחכה."</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sim-step step-hidden" data-step="2" data-for="A">
+      <div class="chat">
+        <div class="bubble bubble-customer">
+          <div class="bubble-label">הלקוח · רונית</div>
+          שלחת לי כבר מדריך קודם ולא הספקתי לפתוח אותו. אני פשוט לא רוצה שנתקע עם עוד כלי שאף אחד לא משתמש בו.
+        </div>
+      </div>
+      <div class="sim-options">
+        <button class="sim-option" data-correct="false" onclick="simStep2(this, 6)">
+          <span class="sim-marker">א</span>
+          <span>"המדריך ממש ברור, שווה שתנסי שוב כשיהיה לך רגע."</span>
+        </button>
+        <button class="sim-option" data-correct="true" onclick="simStep2(this, 6)">
+          <span class="sim-marker">ב</span>
+          <span>"הבנתי — בואי נעשה 15 דקות ביחד עכשיו על משימה אחת אמיתית שלך, בלי מדריך."</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sim-step step-hidden" data-step="2" data-for="B">
+      <div class="chat">
+        <div class="bubble bubble-customer">
+          <div class="bubble-label">הלקוח · רונית</div>
+          זה נשמע הגיוני. שלושת הדברים שהכי חשובים לנו זה להוציא דוח יומי, לעדכן סטטוס, ולראות התראות. אפשר להתחיל מזה?
+        </div>
+      </div>
+      <div class="sim-options">
+        <button class="sim-option" data-correct="false" onclick="simStep2(this, 6)">
+          <span class="sim-marker">א</span>
+          <span>"מעולה, אבל כדאי שנעבור גם על שאר הפיצ'רים כדי שתכירי הכול."</span>
+        </button>
+        <button class="sim-option" data-correct="true" onclick="simStep2(this, 6)">
+          <span class="sim-marker">ב</span>
+          <span>"בדיוק. נעשה עכשיו רק את השלושה האלה עד שהם זורמים, ונקבע מעקב לעוד שבוע להוסיף."</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sim-feedback" id="fb-6"></div>
+
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-6"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next sim-next" data-sim="6" onclick="go(1)" disabled>
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 8 — סימולציה 2 -->
+  <div class="card" id="slide-7">
+    <div class="tag">סימולציה · מעקב 30 יום</div>
+    <h1 class="slide-title">שיחת מעקב — הלקוח שקט מדי</h1>
+
+    <div class="chat">
+      <div class="bubble bubble-customer">
+        <div class="bubble-label">הלקוח · עומר, בעל עסק</div>
+        האמת? לא ממש נכנסתי לזה עדיין. היה עמוס. זה בסדר, אני אגיע לזה מתישהו.
+      </div>
+    </div>
+
+    <div class="sim-step" data-step="1">
+      <div class="sim-options">
+        <button class="sim-option" data-branch="A" onclick="simStep1(this, 7)">
+          <span class="sim-marker">א</span>
+          <span>"אין בעיה, נדבר כשיתפנה לך. תעדכן אותי."</span>
+        </button>
+        <button class="sim-option" data-branch="B" onclick="simStep1(this, 7)">
+          <span class="sim-marker">ב</span>
+          <span>"לגמרי מבין שהיה עמוס. מה הדבר האחד שאם היה עובד היום היה חוסך לך הכי הרבה זמן?"</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sim-step step-hidden" data-step="2" data-for="A">
+      <div class="chat">
+        <div class="bubble bubble-customer">
+          <div class="bubble-label">הלקוח · עומר</div>
+          כן... נדבר. (ואתה יודע שכנראה לא תשמע ממנו עד שיבטל את המנוי)
+        </div>
+      </div>
+      <div class="sim-options">
+        <button class="sim-option" data-correct="false" onclick="simStep2(this, 7)">
+          <span class="sim-marker">א</span>
+          <span>"מעולה, אני כאן אם תצטרך." ומסיים את השיחה.</span>
+        </button>
+        <button class="sim-option" data-correct="true" onclick="simStep2(this, 7)">
+          <span class="sim-marker">ב</span>
+          <span>"רגע לפני שנסגור — אפשר 5 דקות עכשיו שאראה לך דבר אחד שיחסוך לך זמן כבר השבוע?"</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sim-step step-hidden" data-step="2" data-for="B">
+      <div class="chat">
+        <div class="bubble bubble-customer">
+          <div class="bubble-label">הלקוח · עומר</div>
+          כנראה שליצור הצעות מחיר — אני עושה את זה ידני וזה לוקח לי שעה כל פעם.
+        </div>
+      </div>
+      <div class="sim-options">
+        <button class="sim-option" data-correct="false" onclick="simStep2(this, 7)">
+          <span class="sim-marker">א</span>
+          <span>"יש לנו פיצ'ר לזה, אני אשלח לך קישור למדריך."</span>
+        </button>
+        <button class="sim-option" data-correct="true" onclick="simStep2(this, 7)">
+          <span class="sim-marker">ב</span>
+          <span>"בוא נבנה יחד הצעת מחיר אחת אמיתית ממש עכשיו — בפעם הבאה זה ייקח לך דקותיים."</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sim-feedback" id="fb-7"></div>
+
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-7"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next sim-next" data-sim="7" onclick="go(1)" disabled>
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 9 — סיום -->
+  <div class="card summary-card" id="slide-8">
+    <div class="tag">סיכום</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="30" fill="var(--correct-bg)" stroke="var(--correct-border)" stroke-width="1.6"/>
+          <path d="M28 41l9 9 15-19" stroke="var(--correct-text)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">כל הכבוד — סיימת את המודול!</h1>
+    </div>
+    <p class="slide-body">Onboarding טוב הוא לא סדרת מיילים — הוא שיחות שבהן הלקוח מרגיש שרואים אותו. הנה מה שכדאי לקחת לשיחה הבאה:</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">הכר את המטרה של הלקוח לפני שאתה מדבר על פיצ'רים</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">כשלקוח מוצף — צמצם, אל תוסיף. התמקד בדבר אחד שעובד</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">"נדבר מתישהו" = דגל אדום. הצע צעד קטן ומיידי במקום</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">עשו יחד, אל תשלחו מדריך. פעולה משותפת אחת שווה עשרה קישורים</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-8"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="restart()">
+          התחל מחדש
+          <svg viewBox="0 0 16 16" fill="none"><path d="M13 8a5 5 0 1 1-1.5-3.5M12 2v3h-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="end-note" id="end-note">סיימת את המודול הזה.</div>
+
+<script>
+  const TOTAL = 9;
+  let current = 0;
+
+  const SIM_FEEDBACK = {
+    6: {
+      correct: "בחירה מצוינת. כשלקוח מרגיש מוצף, הפתרון הוא לצמצם ולא להוסיף — פעולה משותפת אחת קטנה מורידה חרדה יותר מכל מדריך.",
+      wrong: "שים לב: כשהלקוח מוצף, עוד מדריך או עוד פיצ'רים רק מגבירים את התחושה. הגישה האפקטיבית: לעשות יחד משימה אחת אמיתית, ולדחות את השאר."
+    },
+    7: {
+      correct: "בול. \"נדבר מתישהו\" הוא דגל אדום לנטישה. הצעד הנכון הוא להציע ערך קטן ומיידי עכשיו — ולעשות אותו יחד, לא לשלוח קישור.",
+      wrong: "היזהר: לתת ללקוח שקט ללכת, או לשלוח לו מדריך, כמעט תמיד מסתיים בנטישה שקטה. הצע צעד קטן ומיידי ובצע אותו יחד איתו בשיחה."
+    }
+  };
+
+  function renderDots(slideIndex) {
+    const container = document.getElementById('dots-' + slideIndex);
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < TOTAL; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      if (i === slideIndex) { d.style.width = '22px'; d.style.background = 'var(--dot-active)'; }
+      else if (i < slideIndex) { d.style.width = '6px'; d.style.background = 'var(--dot-done)'; }
+      else { d.style.width = '6px'; d.style.background = 'var(--dot-todo)'; }
+      container.appendChild(d);
+    }
+  }
+
+  function go(dir) {
+    const next = current + dir;
+    if (next < 0 || next >= TOTAL) return;
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = next;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + TOTAL;
+    document.getElementById('end-note').classList.toggle('visible', current === TOTAL - 1);
+    renderDots(current);
+    if (current === TOTAL - 1) notifyComplete();
+  }
+
+  function notifyComplete() {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'course-complete', unit: 'customer-onboarding' }, '*');
+      }
+    } catch (e) {}
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    const items = document.querySelectorAll('#checklist .check-item');
+    const done = document.querySelectorAll('#checklist .check-item.checked').length;
+    document.getElementById('check-progress').textContent =
+      done === items.length ? 'מצוין — כל הפריטים סומנו! זו רשימת הפתיחה המלאה שלך.' : done + ' מתוך ' + items.length + ' סומנו';
+  }
+
+  function simStep1(el, slideId) {
+    const card = document.getElementById('slide-' + slideId);
+    const branch = el.getAttribute('data-branch');
+    card.querySelectorAll('.sim-step[data-step="1"] .sim-option').forEach(o => {
+      o.disabled = true;
+      if (o === el) o.classList.add('chosen'); else o.classList.add('dimmed');
+    });
+    const step2 = card.querySelector('.sim-step[data-step="2"][data-for="' + branch + '"]');
+    if (step2) step2.classList.remove('step-hidden');
+  }
+
+  function simStep2(el, slideId) {
+    const card = document.getElementById('slide-' + slideId);
+    const isCorrect = el.getAttribute('data-correct') === 'true';
+    card.querySelectorAll('.sim-step[data-step="2"]:not(.step-hidden) .sim-option').forEach(o => {
+      o.disabled = true;
+      if (o === el) o.classList.add('chosen'); else o.classList.add('dimmed');
+    });
+    const fb = document.getElementById('fb-' + slideId);
+    const msg = SIM_FEEDBACK[slideId];
+    fb.textContent = isCorrect ? msg.correct : msg.wrong;
+    fb.classList.remove('good', 'warn');
+    fb.classList.add('visible', isCorrect ? 'good' : 'warn');
+    card.querySelector('.sim-next').disabled = false;
+  }
+
+  function resetSim(slideId) {
+    const card = document.getElementById('slide-' + slideId);
+    card.querySelectorAll('.sim-option').forEach(o => {
+      o.disabled = false; o.classList.remove('chosen', 'dimmed');
+    });
+    card.querySelectorAll('.sim-step[data-step="2"]').forEach(s => s.classList.add('step-hidden'));
+    const fb = document.getElementById('fb-' + slideId);
+    if (fb) { fb.classList.remove('visible', 'good', 'warn'); fb.textContent = ''; }
+    const nextBtn = card.querySelector('.sim-next');
+    if (nextBtn) nextBtn.disabled = true;
+  }
+
+  function restart() {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = 0;
+    document.getElementById('slide-0').classList.add('active');
+    document.getElementById('counter').textContent = '1 / ' + TOTAL;
+    document.getElementById('end-note').classList.remove('visible');
+    document.querySelectorAll('#checklist .check-item').forEach(i => i.classList.remove('checked'));
+    const cp = document.getElementById('check-progress');
+    if (cp) cp.textContent = '0 מתוך 5 סומנו';
+    resetSim(6); resetSim(7);
+    renderDots(0);
+  }
+
+  for (let i = 0; i < TOTAL; i++) renderDots(i);
+</script>
+</body>
+</html>

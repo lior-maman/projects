@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מרכז שליטה סייבר - סימולציית תגובה לאירועים</title>
+    <style>
+        :root {
+            --bg: #0a0e14;
+            --panel: #0f141d;
+            --panel-2: #141b26;
+            --border: #1f2a3a;
+            --border-glow: #2b3a52;
+            --text: #c9d5e5;
+            --muted: #6b7d94;
+            --green: #3fb950;
+            --green-glow: rgba(63, 185, 80, 0.35);
+            --red: #f85149;
+            --blue: #58a6ff;
+            --amber: #d29922;
+            --accent: #2f81f7;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        html, body { width: 100%; height: 100%; }
+        body {
+            background:
+                radial-gradient(circle at 20% 15%, rgba(47, 129, 247, 0.08), transparent 45%),
+                radial-gradient(circle at 85% 90%, rgba(63, 185, 80, 0.06), transparent 40%),
+                var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            overflow: hidden;
+        }
+        .terminal-container {
+            width: 100%;
+            max-width: 1100px;
+            height: calc(100% - 24px);
+            min-height: 0;
+            background-color: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(47, 129, 247, 0.05);
+            overflow: hidden;
+        }
+        .terminal-header {
+            background: linear-gradient(180deg, #161f2c, #10161f);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .header-left { display: flex; align-items: center; gap: 14px; }
+        .terminal-buttons { display: flex; gap: 8px; }
+        .btn-circle { width: 13px; height: 13px; border-radius: 50%; }
+        .btn-close { background-color: #ff5f56; }
+        .btn-minimize { background-color: #ffbd2e; }
+        .btn-maximize { background-color: #27c93f; }
+        .terminal-title { font-size: 14px; color: var(--muted); letter-spacing: 0.5px; }
+        .live-badge {
+            display: flex; align-items: center; gap: 7px;
+            font-size: 12px; color: var(--green);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            padding: 4px 10px; border-radius: 20px;
+            background: rgba(63, 185, 80, 0.06);
+        }
+        .pulse-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green-glow);
+            animation: pulse 1.6s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+        .status-bar {
+            display: flex; align-items: center; gap: 20px;
+            padding: 14px 22px;
+            background: var(--panel-2);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .progress-wrap { flex: 1; }
+        .progress-labels {
+            display: flex; justify-content: space-between;
+            font-size: 12px; color: var(--muted); margin-bottom: 6px;
+        }
+        .progress-track {
+            height: 8px; background: #0b1017;
+            border: 1px solid var(--border);
+            border-radius: 6px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--blue));
+            border-radius: 6px; transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(47, 129, 247, 0.5);
+        }
+        .score-box { text-align: center; min-width: 120px; }
+        .score-box .label {
+            font-size: 11px; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .score-box .value { font-size: 24px; font-weight: bold; color: var(--green); }
+        .terminal-body {
+            flex: 1; padding: 28px 32px;
+            overflow-y: auto;
+            display: flex; flex-direction: column; gap: 22px;
+        }
+        .terminal-body::-webkit-scrollbar { width: 10px; }
+        .terminal-body::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 6px; }
+        .scenario-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 13px; color: var(--amber);
+            border: 1px solid rgba(210, 153, 34, 0.3);
+            background: rgba(210, 153, 34, 0.06);
+            padding: 5px 12px; border-radius: 6px;
+            align-self: flex-start;
+        }
+        .output-area { line-height: 1.7; font-size: 17px; }
+        .output-area .prompt-prefix { color: var(--green); }
+        .scenario-title { font-size: 20px; color: #fff; margin: 4px 0 8px; font-weight: bold; }
+        .scenario-desc { color: var(--text); }
+        .success { color: var(--green); font-weight: bold; }
+        .error { color: var(--red); font-weight: bold; }
+        .info { color: var(--blue); }
+        .highlight { color: var(--amber); font-weight: bold; }
+        .feedback {
+            margin-top: 14px; padding: 14px 16px;
+            border-radius: 8px; font-size: 15px; line-height: 1.6;
+            animation: fadeIn 0.4s ease;
+        }
+        .feedback.ok { background: rgba(63, 185, 80, 0.08); border-inline-start: 3px solid var(--green); }
+        .feedback.bad { background: rgba(248, 81, 73, 0.08); border-inline-start: 3px solid var(--red); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .options-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 14px; margin-top: 6px;
+        }
+        .option-btn {
+            background: linear-gradient(180deg, #1a2432, #141b26);
+            color: var(--text); border: 1px solid var(--border);
+            padding: 18px 18px; border-radius: 8px;
+            cursor: pointer; text-align: right;
+            font-size: 15px; line-height: 1.5;
+            transition: all 0.18s ease;
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .option-btn .key { color: var(--accent); font-weight: bold; flex-shrink: 0; }
+        .option-btn:hover:not(:disabled) {
+            background: linear-gradient(180deg, #22303f, #1a2432);
+            border-color: var(--accent); color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(47, 129, 247, 0.18);
+        }
+        .option-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .option-btn.correct-answer { border-color: var(--green); box-shadow: 0 0 0 1px var(--green-glow); }
+        .option-btn.wrong-answer { border-color: var(--red); box-shadow: 0 0 0 1px rgba(248, 81, 73, 0.35); }
+        .prompt-line {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 22px;
+            border-top: 1px solid var(--border);
+            background: var(--panel-2);
+            font-size: 14px; color: var(--muted);
+            flex-shrink: 0;
+        }
+        .prompt-symbol { color: var(--green); font-weight: bold; }
+        .cursor {
+            display: inline-block; width: 9px; height: 16px;
+            background: var(--green); margin-inline-start: 2px;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        .final-screen { text-align: center; padding: 10px 0; }
+        .final-grade { font-size: 64px; font-weight: bold; margin: 10px 0; }
+        .final-score-ring { width: 160px; height: 160px; margin: 8px auto 20px; position: relative; }
+        .final-score-ring svg { transform: rotate(-90deg); }
+        .ring-bg { fill: none; stroke: var(--border); stroke-width: 12; }
+        .ring-fill { fill: none; stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+        .ring-center {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .ring-center .num { font-size: 40px; font-weight: bold; }
+        .ring-center .of { font-size: 14px; color: var(--muted); }
+        .restart-btn {
+            background: linear-gradient(180deg, #2ea043, #238636);
+            color: #fff; border: none;
+            padding: 15px 34px; border-radius: 8px;
+            font-size: 16px; font-weight: bold;
+            cursor: pointer; margin-top: 14px;
+            transition: all 0.2s;
+        }
+        .restart-btn:hover { filter: brightness(1.12); transform: translateY(-2px); }
+        .breakdown { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 18px 0 6px; }
+        .q-chip {
+            width: 42px; height: 42px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 15px;
+            border: 1px solid var(--border);
+        }
+        .q-chip.ok { background: rgba(63,185,80,0.12); color: var(--green); border-color: var(--green); }
+        .q-chip.bad { background: rgba(248,81,73,0.12); color: var(--red); border-color: var(--red); }
+        @media (max-width: 720px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .terminal-body { padding: 20px; }
+            .output-area { font-size: 15px; }
+            .status-bar { flex-direction: column; align-items: stretch; gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="terminal-container">
+    <div class="terminal-header">
+        <div class="header-left">
+            <div class="terminal-buttons">
+                <div class="btn-circle btn-close"></div>
+                <div class="btn-circle btn-minimize"></div>
+                <div class="btn-circle btn-maximize"></div>
+            </div>
+            <div class="terminal-title">sec_ops@cyber-sim: ~ (Incident Response Console)</div>
+        </div>
+        <div class="live-badge"><span class="pulse-dot"></span> LIVE SESSION</div>
+    </div>
+
+    <div class="status-bar">
+        <div class="progress-wrap">
+            <div class="progress-labels">
+                <span id="progress-label">תרחיש 1 מתוך 5</span>
+                <span id="progress-pct">0%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        </div>
+        <div class="score-box">
+            <div class="label">ציון</div>
+            <div class="value"><span id="score-value">0</span> / 100</div>
+        </div>
+    </div>
+
+    <div class="terminal-body" id="terminal-body">
+        <div class="scenario-tag" id="scenario-tag">⚠ INCIDENT #1</div>
+        <div class="output-area" id="output-text"></div>
+        <div class="options-grid" id="options-container"></div>
+    </div>
+
+    <div class="prompt-line">
+        <span class="prompt-symbol">➜</span>
+        <span id="status-text">ממתין לפעולת משתמש</span>
+        <span class="cursor"></span>
+    </div>
+</div>
+
+<script>
+    const POINTS_PER_Q = 20;
+
+    const questions = [
+        {
+            tag: "⚠ INCIDENT #1 — ניטור רשת",
+            title: "תרחיש 1: התרעה חריגה במערכות הארגון",
+            desc: "מערכת ה-SIEM מזהה תעבורה חריגה מכתובת IP חיצונית לעבר תחנת קצה פנימית, כולל ניסיונות התחברות מרובים. מהי תגובת הנגד המבצעית הנכונה ביותר?",
+            options: [
+                "חסימת כתובת ה-IP החשודה ובידוד התחנה מהרשת מיידית.",
+                "כיבוי מוחלט של שרת ה-Web הראשי כדי למנוע דליפת מידע.",
+                "התעלמות מההתרעה עד להגעת צוות ה-SOC בבוקר.",
+                "שינוי סיסמת מנהל המערכת בלבד מבלי לגעת בתעבורה."
+            ],
+            correct: 0,
+            okMsg: "בידוד מהיר של התחנה עצר את התפשטות האיום ושימר ראיות פורנזיות לחקירה.",
+            badMsg: "התגובה לא בלמה את האיום. העיקרון הוא Contain first — לבודד ולחסום את מקור המתקפה מיד."
+        },
+        {
+            tag: "⚠ INCIDENT #2 — אבטחת יישומים",
+            title: "תרחיש 2: פעילות SQL Injection בטופס באתר",
+            desc: "בלוגים מזוהים ניסיונות הזרקת שאילתות דרך טופס יצירת קשר. מהו הפתרון היעיל ביותר למניעת הפגיעות בשורש?",
+            options: [
+                "שימוש בשאילתות מוכנות (Prepared Statements) והפרדת קוד מנתונים.",
+                "הוספת תווים מיוחדים ידנית לכל משתנה בשורת הכתובת.",
+                "מחיקת מסד הנתונים ובנייתו מחדש באמצעות NoSQL.",
+                "הגבלת גישה לפורט 80 בלבד בתוך חומת האש."
+            ],
+            correct: 0,
+            okMsg: "Prepared Statements מפרידים בין קוד לנתונים ומנטרלים לחלוטין הזרקות SQL.",
+            badMsg: "הפתרון לא מטפל בשורש הבעיה. הזרקת SQL נמנעת ע\"י Prepared Statements / Parameterized Queries."
+        },
+        {
+            tag: "⚠ INCIDENT #3 — הנדסה חברתית",
+            title: "תרחיש 3: מייל פישינג ממוקד למנכ\"ל",
+            desc: "התקבל מייל דחוף המתחזה לספק, המבקש העברה כספית מיידית ומכיל קישור להזדהות. מהי הפעולה הנכונה?",
+            options: [
+                "דיווח לצוות האבטחה, אימות הזהות בערוץ נפרד ואי-לחיצה על הקישור.",
+                "לחיצה על הקישור כדי לבדוק אם האתר נראה אמין.",
+                "העברת התשלום כדי לא לעכב את הספק, ואז בדיקה.",
+                "מחיקת המייל בלבד מבלי לדווח לאיש."
+            ],
+            correct: 0,
+            okMsg: "אימות דרך ערוץ עצמאי ודיווח לצוות האבטחה הם ההגנה המרכזית מפני BEC ופישינג ממוקד.",
+            badMsg: "פעולה זו מסכנת את הארגון. לעולם אין ללחוץ, לשלם או להתעלם — יש לאמת בערוץ נפרד ולדווח."
+        },
+        {
+            tag: "⚠ INCIDENT #4 — כופרה (Ransomware)",
+            title: "תרחיש 4: הצפנת קבצים על שרת קבצים ארגוני",
+            desc: "מספר תחנות מדווחות על קבצים מוצפנים והודעת כופר. הגיבויים מנוהלים לפי כלל 3-2-1. מהי הפעולה הראשונה והנכונה?",
+            options: [
+                "בידוד המערכות הנגועות מהרשת ושחזור מגיבוי נקי לאחר ניקוי.",
+                "תשלום הכופר מיידית כדי לשחזר את הקבצים במהירות.",
+                "הפעלה מחדש של כל השרתים בתקווה שההצפנה תיעלם.",
+                "המשך עבודה רגיל תוך התעלמות מהקבצים המוצפנים."
+            ],
+            correct: 0,
+            okMsg: "בידוד מונע התפשטות, ושחזור מגיבוי נקי הוא הדרך הבטוחה — ללא מימון התוקפים.",
+            badMsg: "תשלום הכופר אינו מבטיח שחזור ומעודד תקיפות. הגישה הנכונה: בידוד ואז שחזור מגיבוי."
+        },
+        {
+            tag: "⚠ INCIDENT #5 — ניהול הרשאות",
+            title: "תרחיש 5: חשבון עובד שעזב עדיין פעיל",
+            desc: "בביקורת התגלה שחשבון של עובד שסיים לפני חודשיים עדיין פעיל עם הרשאות גישה למערכות רגישות. מה עושים?",
+            options: [
+                "השבתת החשבון מיידית ויישום עקרון ההרשאה המזערית (Least Privilege).",
+                "השארת החשבון פעיל למקרה שהעובד יחזור בעתיד.",
+                "שינוי הסיסמה בלבד תוך שמירה על כל ההרשאות.",
+                "התעלמות כי העובד כבר לא נמצא בארגון."
+            ],
+            correct: 0,
+            okMsg: "השבתה מיידית ועקרון ההרשאה המזערית מצמצמים את משטח התקיפה וסיכון גישה לא מורשית.",
+            badMsg: "חשבונות לא פעילים הם וקטור תקיפה מסוכן. יש להשבית מיד וליישם Least Privilege."
+        }
+    ];
+
+    let currentStep = 0;
+    let score = 0;
+    const results = [];
+    const letters = ["A", "B", "C", "D"];
+
+    // ---- Storyline bridge -------------------------------------------------
+    // Safely fetch the Storyline player object when embedded as a Web Object.
+    function getStorylinePlayer() {
+        try {
+            if (window.parent && window.parent.GetPlayer) return window.parent.GetPlayer();
+            if (window.GetPlayer) return window.GetPlayer();
+        } catch (e) { /* cross-origin or standalone preview */ }
+        return null;
+    }
+
+    // Push a value into a Storyline variable if it exists.
+    function setStorylineVar(name, value) {
+        const player = getStorylinePlayer();
+        if (!player) return;
+        try { player.SetVar(name, value); } catch (e) { /* var not defined */ }
+    }
+
+    function reportToStoryline() {
+        const correctCount = results.filter(Boolean).length;
+        const passed = score >= 60;
+        setStorylineVar("cyberScore", score);          // Number 0-100
+        setStorylineVar("cyberCorrect", correctCount); // Number 0-5
+        setStorylineVar("cyberPassed", passed);        // True/False
+        setStorylineVar("cyberComplete", true);        // True/False
+    }
+
+    const output = document.getElementById('output-text');
+    const optionsContainer = document.getElementById('options-container');
+    const statusText = document.getElementById('status-text');
+    const scenarioTag = document.getElementById('scenario-tag');
+    const scoreValue = document.getElementById('score-value');
+    const progressFill = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+    const progressPct = document.getElementById('progress-pct');
+
+    function updateProgress() {
+        const pct = Math.round((currentStep / questions.length) * 100);
+        progressFill.style.width = pct + '%';
+        progressPct.innerText = pct + '%';
+        progressLabel.innerText = `תרחיש ${Math.min(currentStep + 1, questions.length)} מתוך ${questions.length}`;
+    }
+
+    function renderQuestion() {
+        const q = questions[currentStep];
+        scenarioTag.innerText = q.tag;
+        output.innerHTML = `
+            <div class="scenario-title">${q.title}</div>
+            <div class="scenario-desc"><span class="prompt-prefix">$</span> ${q.desc}</div>
+        `;
+        optionsContainer.innerHTML = q.options.map((opt, i) =>
+            `<button class="option-btn" onclick="handleChoice(${i})">
+                <span class="key">${letters[i]}.</span><span>${opt}</span>
+             </button>`
+        ).join('');
+        statusText.innerText = "ממתין לבחירת פעולה";
+        updateProgress();
+    }
+
+    function handleChoice(choice) {
+        const q = questions[currentStep];
+        const buttons = optionsContainer.getElementsByTagName('button');
+        for (let btn of buttons) btn.disabled = true;
+
+        const isCorrect = choice === q.correct;
+        buttons[q.correct].classList.add('correct-answer');
+        if (!isCorrect) buttons[choice].classList.add('wrong-answer');
+
+        if (isCorrect) {
+            score += POINTS_PER_Q;
+            scoreValue.innerText = score;
+            setStorylineVar("cyberScore", score);
+            output.innerHTML += `
+                <div class="feedback ok">
+                    <span class="success">[+] תגובה תקינה — +${POINTS_PER_Q} נק'</span><br>${q.okMsg}
+                </div>`;
+        } else {
+            output.innerHTML += `
+                <div class="feedback bad">
+                    <span class="error">[-] תגובה שגויה — 0 נק'</span><br>${q.badMsg}
+                </div>`;
+        }
+        results.push(isCorrect);
+        statusText.innerText = "מעבד תוצאה...";
+
+        currentStep++;
+        setTimeout(() => {
+            if (currentStep < questions.length) {
+                renderQuestion();
+            } else {
+                showFinal();
+            }
+        }, 2600);
+    }
+
+    function showFinal() {
+        updateProgress();
+        reportToStoryline();
+        scenarioTag.innerText = "✔ SIMULATION COMPLETE";
+        const passed = score >= 60;
+        const circumference = 2 * Math.PI * 70;
+        const offset = circumference * (1 - score / 100);
+        const ringColor = passed ? 'var(--green)' : 'var(--red)';
+        const gradeText = passed ? "עברת!" : "נכשל";
+        const gradeColor = passed ? 'var(--green)' : 'var(--red)';
+
+        const chips = results.map((r, i) =>
+            `<div class="q-chip ${r ? 'ok' : 'bad'}">${r ? '✓' : '✗'}<sub style="font-size:9px;margin-inline-start:2px;">${i + 1}</sub></div>`
+        ).join('');
+
+        output.innerHTML = `
+            <div class="final-screen">
+                <div class="info">----------------------------------------</div>
+                <div style="font-size:22px;font-weight:bold;color:#fff;margin:8px 0;">הסימולציה הסתיימה</div>
+                <div class="final-score-ring">
+                    <svg width="160" height="160">
+                        <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
+                        <circle class="ring-fill" cx="80" cy="80" r="70"
+                            stroke="${ringColor}"
+                            stroke-dasharray="${circumference}"
+                            stroke-dashoffset="${circumference}"
+                            id="ring-fill"></circle>
+                    </svg>
+                    <div class="ring-center">
+                        <span class="num" style="color:${gradeColor}">${score}</span>
+                        <span class="of">מתוך 100</span>
+                    </div>
+                </div>
+                <div class="final-grade" style="font-size:34px;color:${gradeColor}">${gradeText}</div>
+                <div style="color:var(--muted);font-size:15px;">ענית נכון על <span class="highlight">${results.filter(Boolean).length}</span> מתוך ${questions.length} תרחישים</div>
+                <div class="breakdown">${chips}</div>
+                <div style="color:var(--muted);font-size:13px;margin-top:4px;">${passed ? 'עברת את סף ההצלחה המבצעי (60 ומעלה).' : 'נדרש ציון 60 ומעלה כדי לעבור. רענן ונסה שוב.'}</div>
+            </div>
+        `;
+        optionsContainer.innerHTML = `
+            <button class="restart-btn" style="grid-column: span 2;" onclick="location.reload()">↻ הפעל סימולציה מחדש</button>
+        `;
+        statusText.innerText = "הפעילות הסתיימה";
+
+        setTimeout(() => {
+            const ring = document.getElementById('ring-fill');
+            if (ring) ring.style.strokeDashoffset = offset;
+        }, 150);
+    }
+
+    renderQuestion();
+</script>
+
+</body>
+</html>

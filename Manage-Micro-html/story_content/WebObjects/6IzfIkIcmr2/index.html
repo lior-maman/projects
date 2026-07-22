@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="day">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>הכשרת מנהלים — תקשורת אפקטיבית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ===== ערכת צבעים — מצב יום (קרם חם) ===== */
+  :root, [data-theme="day"] {
+    --bg-1: #f4efe6;
+    --bg-2: #efe7da;
+    --bg-3: #e9dfcf;
+    --grid: rgba(120,100,70,0.05);
+    --topbar-bg: rgba(244,239,230,0.75);
+    --topbar-border: rgba(120,100,70,0.16);
+    --brand-icon-bg: rgba(176,141,87,0.14);
+    --brand-icon-border: rgba(176,141,87,0.4);
+    --brand-label: rgba(90,78,60,0.85);
+    --counter: rgba(120,105,80,0.55);
+    --card-bg: rgba(255,252,246,0.86);
+    --card-border: rgba(176,141,87,0.22);
+    --card-shadow: 0 18px 50px rgba(120,95,55,0.12), 0 1px 0 rgba(255,255,255,0.6) inset;
+    --tag-bg: rgba(176,141,87,0.12);
+    --tag-border: rgba(176,141,87,0.35);
+    --tag-text: rgba(139,105,58,0.95);
+    --accent: #b08d57;           /* זהב/טאופה */
+    --accent-strong: #9a7742;
+    --accent-soft: rgba(176,141,87,0.14);
+    --title: rgba(43,38,30,0.96);
+    --body: rgba(74,66,54,0.9);
+    --point-text: rgba(60,53,42,0.94);
+    --divider: rgba(120,100,70,0.14);
+    --dot-active: rgba(176,141,87,0.95);
+    --dot-done: rgba(176,141,87,0.5);
+    --dot-todo: rgba(120,100,70,0.2);
+    --btn-next-bg: #b08d57;
+    --btn-next-text: #fffdf8;
+    --btn-next-glow: rgba(176,141,87,0.32);
+    --btn-back-bg: rgba(176,141,87,0.1);
+    --btn-back-border: rgba(176,141,87,0.28);
+    --btn-back-text: rgba(90,78,60,0.9);
+    --opt-bg: rgba(176,141,87,0.07);
+    --opt-border: rgba(176,141,87,0.22);
+    --opt-hover: rgba(176,141,87,0.14);
+    --opt-text: rgba(50,44,35,0.94);
+    --marker-border: rgba(176,141,87,0.45);
+    --marker-text: rgba(120,100,70,0.85);
+    --correct-bg: rgba(96,140,90,0.14);
+    --correct-border: rgba(96,140,90,0.6);
+    --correct-text: rgba(74,110,68,0.95);
+    --wrong-bg: rgba(190,90,80,0.12);
+    --wrong-border: rgba(190,90,80,0.55);
+    --wrong-text: rgba(170,75,66,0.95);
+    --fb-ok-bg: rgba(96,140,90,0.1);
+    --fb-ok-border: rgba(96,140,90,0.32);
+    --fb-wrong-bg: rgba(190,90,80,0.09);
+    --fb-wrong-border: rgba(190,90,80,0.32);
+    --fb-text: rgba(70,62,50,0.95);
+    --end-note: rgba(139,105,58,0.6);
+    --visual-glow: rgba(176,141,87,0.28);
+  }
+
+  /* ===== ערכת צבעים — מצב לילה (פחם/שחור נייטרלי) ===== */
+  [data-theme="night"] {
+    --bg-1: #14130f;
+    --bg-2: #1c1a15;
+    --bg-3: #100f0c;
+    --grid: rgba(210,190,150,0.04);
+    --topbar-bg: rgba(20,19,15,0.6);
+    --topbar-border: rgba(210,190,150,0.12);
+    --brand-icon-bg: rgba(198,166,110,0.12);
+    --brand-icon-border: rgba(198,166,110,0.32);
+    --brand-label: rgba(214,204,186,0.75);
+    --counter: rgba(200,188,165,0.45);
+    --card-bg: rgba(32,30,25,0.8);
+    --card-border: rgba(198,166,110,0.18);
+    --card-shadow: 0 0 80px rgba(0,0,0,0.4), 0 1px 0 rgba(198,166,110,0.08) inset;
+    --tag-bg: rgba(198,166,110,0.12);
+    --tag-border: rgba(198,166,110,0.3);
+    --tag-text: rgba(212,178,120,0.92);
+    --accent: #c6a66e;
+    --accent-strong: #d8bd88;
+    --accent-soft: rgba(198,166,110,0.14);
+    --title: rgba(240,234,222,0.97);
+    --body: rgba(198,190,175,0.9);
+    --point-text: rgba(206,198,183,0.94);
+    --divider: rgba(210,190,150,0.12);
+    --dot-active: rgba(198,166,110,0.9);
+    --dot-done: rgba(198,166,110,0.45);
+    --dot-todo: rgba(210,190,150,0.2);
+    --btn-next-bg: rgba(198,166,110,0.92);
+    --btn-next-text: #14130f;
+    --btn-next-glow: rgba(198,166,110,0.28);
+    --btn-back-bg: rgba(198,166,110,0.1);
+    --btn-back-border: rgba(198,166,110,0.22);
+    --btn-back-text: rgba(206,198,183,0.85);
+    --opt-bg: rgba(198,166,110,0.06);
+    --opt-border: rgba(198,166,110,0.18);
+    --opt-hover: rgba(198,166,110,0.14);
+    --opt-text: rgba(232,226,214,0.92);
+    --marker-border: rgba(198,166,110,0.4);
+    --marker-text: rgba(200,188,165,0.8);
+    --correct-bg: rgba(120,170,110,0.14);
+    --correct-border: rgba(120,170,110,0.55);
+    --correct-text: rgba(150,200,140,0.95);
+    --wrong-bg: rgba(220,120,110,0.12);
+    --wrong-border: rgba(220,120,110,0.5);
+    --wrong-text: rgba(235,150,140,0.95);
+    --fb-ok-bg: rgba(120,170,110,0.09);
+    --fb-ok-border: rgba(120,170,110,0.3);
+    --fb-wrong-bg: rgba(220,120,110,0.08);
+    --fb-wrong-border: rgba(220,120,110,0.3);
+    --fb-text: rgba(200,192,178,0.95);
+    --end-note: rgba(198,166,110,0.5);
+    --visual-glow: rgba(198,166,110,0.3);
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Rubik', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(155deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+    color: var(--body);
+    user-select: none;
+    direction: rtl;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  .topbar {
+    position: absolute;
+    top: 0; right: 0; left: 0;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--topbar-border);
+    background: var(--topbar-bg);
+    transition: background 0.4s ease, border-color 0.4s ease;
+  }
+
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+  .topbar-left { display: flex; align-items: center; gap: 18px; }
+
+  .brand-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--brand-icon-bg);
+    border: 1px solid var(--brand-icon-border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-icon svg { width: 20px; height: 20px; }
+
+  .brand-label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--brand-label);
+  }
+
+  .slide-counter {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--counter);
+    direction: ltr;
+  }
+
+  /* מתג יום/לילה */
+  .theme-toggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    border-radius: 100px;
+    background: var(--accent-soft);
+    border: 1px solid var(--brand-icon-border);
+    color: var(--brand-label);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .theme-toggle:hover { background: var(--opt-hover); }
+  .theme-toggle svg { width: 16px; height: 16px; }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="night"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="night"] .theme-toggle .icon-moon { display: none; }
+  .theme-toggle .label-day { display: none; }
+  .theme-toggle .label-night { display: inline; }
+  [data-theme="night"] .theme-toggle .label-day { display: inline; }
+  [data-theme="night"] .theme-toggle .label-night { display: none; }
+
+  .stage {
+    position: absolute;
+    top: 72px; right: 0; left: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 960px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 40px 48px;
+    box-shadow: var(--card-shadow);
+    display: none;
+    flex-direction: column;
+    gap: 28px;
+    animation: fadeIn 0.25s ease;
+    transition: background 0.4s ease, border-color 0.4s ease;
+  }
+  .card.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tag {
+    align-self: flex-start;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 6px 18px;
+    border-radius: 100px;
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    color: var(--tag-text);
+  }
+
+  .hero-row { display: flex; align-items: center; gap: 36px; }
+
+  .visual {
+    width: 120px; height: 120px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--visual-glow) 0%, transparent 70%);
+  }
+  .visual svg { width: 76px; height: 76px; position: relative; z-index: 1; }
+  .visual svg [stroke] { stroke: var(--accent); }
+  .visual svg [fill]:not([fill="none"]) { fill: var(--accent-soft); }
+  .visual svg .accent-strong { stroke: var(--accent-strong); }
+  .visual svg .ok { stroke: var(--correct-text); }
+
+  .slide-title {
+    font-size: 31px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--title);
+  }
+
+  .slide-body {
+    font-size: 17px;
+    line-height: 1.85;
+    color: var(--body);
+  }
+
+  .points { display: flex; flex-direction: column; gap: 12px; }
+
+  .point { display: flex; align-items: flex-start; gap: 14px; }
+
+  .point-dot {
+    margin-top: 9px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .point-text { font-size: 16px; color: var(--point-text); line-height: 1.6; }
+
+  .divider { height: 1px; background: var(--divider); }
+
+  .nav-row { display: flex; align-items: center; justify-content: space-between; }
+
+  .dots { display: flex; align-items: center; gap: 8px; }
+
+  .dot { height: 6px; border-radius: 3px; transition: width 0.3s ease, background 0.3s ease; }
+
+  .btn-group { display: flex; gap: 12px; }
+
+  button {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; outline: none;
+    transition: opacity 0.15s, box-shadow 0.15s, background 0.15s;
+    font-family: inherit;
+  }
+  button svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .btn-back {
+    background: var(--btn-back-bg);
+    border: 1px solid var(--btn-back-border);
+    color: var(--btn-back-text);
+  }
+  .btn-back:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn-next {
+    background: var(--btn-next-bg);
+    border: 1px solid var(--accent);
+    color: var(--btn-next-text);
+    box-shadow: 0 0 20px var(--btn-next-glow);
+  }
+  .btn-next:hover:not(:disabled) { filter: brightness(1.06); box-shadow: 0 0 28px var(--btn-next-glow); }
+  .btn-next:disabled {
+    background: var(--accent-soft);
+    border-color: var(--opt-border);
+    color: var(--counter);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  /* היפוך חצים לכיווניות RTL */
+  .btn-next svg, .btn-back svg { transform: scaleX(-1); }
+
+  /* שאלת תרגול */
+  .quiz-options { display: flex; flex-direction: column; gap: 12px; }
+
+  .quiz-option {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background: var(--opt-bg);
+    border: 1px solid var(--opt-border);
+    color: var(--opt-text);
+    font-size: 16px;
+    font-family: inherit;
+    text-align: right;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .quiz-option:hover:not(.answered) { background: var(--opt-hover); border-color: var(--marker-border); }
+
+  .quiz-marker {
+    width: 26px; height: 26px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1.5px solid var(--marker-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    color: var(--marker-text);
+  }
+  .quiz-marker svg { width: 14px; height: 14px; transform: none; }
+
+  .quiz-option.correct { background: var(--correct-bg); border-color: var(--correct-border); }
+  .quiz-option.correct .quiz-marker { border-color: var(--correct-border); background: var(--correct-bg); color: var(--correct-text); }
+  .quiz-option.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); }
+  .quiz-option.wrong .quiz-marker { border-color: var(--wrong-border); background: var(--wrong-bg); color: var(--wrong-text); }
+  .quiz-option.answered { cursor: default; }
+  .quiz-option.dimmed { opacity: 0.45; }
+
+  .quiz-feedback {
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 14px 18px;
+    border-radius: 10px;
+    color: var(--fb-text);
+    background: var(--fb-ok-bg);
+    border: 1px solid var(--fb-ok-border);
+    opacity: 0; max-height: 0; overflow: hidden;
+    transition: opacity 0.25s ease, max-height 0.25s ease;
+  }
+  .quiz-feedback.visible { opacity: 1; max-height: 180px; }
+  .quiz-feedback.wrong { background: var(--fb-wrong-bg); border-color: var(--fb-wrong-border); }
+
+  .end-note {
+    position: absolute;
+    bottom: 32px; right: 50%;
+    transform: translateX(50%);
+    font-size: 14px;
+    color: var(--end-note);
+    letter-spacing: 0.02em;
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .end-note.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-right">
+    <div class="brand-icon">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M4 5h12M4 10h8M4 15h10" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="brand-label">הכשרת מנהלים · תקשורת אפקטיבית</span>
+  </div>
+  <div class="topbar-left">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="מתג יום ולילה">
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="none"><path d="M13 9.5A5.5 5.5 0 0 1 6.5 3c0-.4.05-.8.13-1.18A5.5 5.5 0 1 0 14.18 9.4c-.38.07-.77.1-1.18.1Z" fill="currentColor"/></svg>
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M13 3l-1.1 1.1M4.1 11.9 3 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span class="label-night">מצב לילה</span>
+      <span class="label-day">מצב יום</span>
+    </button>
+    <span class="slide-counter" id="counter">1 / 9</span>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- שקופית 1 — מבוא -->
+  <div class="card active" id="slide-0">
+    <div class="tag">מבוא</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <path d="M14 20h38a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H30l-12 10V50h-4a6 6 0 0 1-6-6V26a6 6 0 0 1 6-6Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="60" cy="24" r="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/>
+          <path d="M56.5 24l2.5 2.5 4.5-5" class="ok" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">מנהיגות מתחילה בשיחה</h1>
+    </div>
+    <p class="slide-body">הכישור החשוב ביותר של מנהל צוות הוא לא ידע מקצועי — אלא היכולת לתקשר. רוב הקונפליקטים, אי-ההבנות והירידה במוטיבציה מתחילים בשיחה שלא נאמרה או נאמרה לא נכון. המודול הזה נותן לך כלים מעשיים שתוכל ליישם כבר בשיחה הבאה עם חבר צוות.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">5 מודולים קצרים סביב מצבי תקשורת אמיתיים מהשטח</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">תרגולים אינטראקטיביים עם משוב מיידי על ההחלטות שלך</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">מודלים פשוטים לזכירה: SBI, הקשבה פעילה, ניהול קונפליקט</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-0"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)" disabled>
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 2 — הקשבה פעילה -->
+  <div class="card" id="slide-1">
+    <div class="tag">הקשבה פעילה</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <path d="M24 30a16 16 0 0 1 32 0c0 8-4 10-4 18a12 12 0 0 1-24 0" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M34 34c2-3 10-3 12 0" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          <path d="M60 34c4 0 4 8 0 8" class="accent-strong" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          <path d="M66 30c7 0 7 16 0 16" class="accent-strong" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">להקשיב כדי להבין, לא כדי להשיב</h1>
+    </div>
+    <p class="slide-body">רוב המנהלים מקשיבים כדי לענות — כבר מנסחים תשובה בזמן שהצד השני מדבר. הקשבה פעילה היא ההפך: אתה מפנה את מלוא תשומת הלב, משקף מה שמעת, ורק אז מגיב. זה בונה אמון ומגלה מידע שלא היה עולה אחרת.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">שאל שאלות פתוחות — "ספר לי עוד", "מה הוביל לזה?"</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">שקף מה שמעת: "אם הבנתי נכון, מה שמפריע לך זה…"</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">אל תקטע ואל תמלא שתיקות — שתיקה מזמינה את הצד השני להעמיק</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-1"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 3 — מתן משוב -->
+  <div class="card" id="slide-2">
+    <div class="tag">מתן משוב</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <rect x="16" y="18" width="48" height="34" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M28 52l-4 10 12-10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M26 30h28M26 38h18" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="58" cy="56" r="9" fill="none" class="accent-strong" stroke-width="1.4"/>
+          <path d="M55 56l2 2 4-4" class="ok" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">משוב שבונה: מודל SBI</h1>
+    </div>
+    <p class="slide-body">משוב טוב הוא ספציפי, לא שיפוטי, וממוקד בהתנהגות — לא באישיות. מודל SBI נותן מבנה פשוט: תאר את המצב (Situation), את ההתנהגות שראית (Behavior), ואת ההשפעה שלה (Impact). כך המשוב נשמע כמו עובדה שאפשר לפעול עליה, לא כמו התקפה.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">מצב: "בפגישת הצוות אתמול בבוקר…"</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">התנהגות: "…קטעת את דנה שלוש פעמים…"</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">השפעה: "…והיא הפסיקה לשתף רעיונות בהמשך הפגישה"</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-2"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 4 — פתרון קונפליקטים -->
+  <div class="card" id="slide-3">
+    <div class="tag">פתרון קונפליקטים</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <circle cx="28" cy="34" r="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <circle cx="52" cy="34" r="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M40 30v8" class="accent-strong" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M20 58c2-6 8-8 20-8s18 2 20 8" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M36 34l3 3 5-6" class="ok" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">מקונפליקט לאינטרס משותף</h1>
+    </div>
+    <p class="slide-body">קונפליקטים בצוות הם בלתי נמנעים — והם לא בהכרח רעים. תפקידך הוא לא להכריע מי צודק, אלא להוריד את המתח מהעמדות ("אני רוצה X") אל האינטרסים שמאחוריהן ("למה X חשוב לי"). כשמדברים על אינטרסים, כמעט תמיד נמצא פתרון שמשרת את שני הצדדים.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">הפרד בין האדם לבעיה — תקוף את הנושא, לא את הבן אדם</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">שאל "למה זה חשוב לך?" כדי לחשוף את האינטרס האמיתי</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">חפש פתרון שבו שני הצדדים מרוויחים — לא פשרה שבה שניהם מפסידים</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-3"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 5 — תקשורת במשבר -->
+  <div class="card" id="slide-4">
+    <div class="tag">תקשורת במשבר</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <path d="M40 14l26 46H14z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/>
+          <line x1="40" y1="32" x2="40" y2="46" class="accent-strong" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="40" cy="53" r="2.6" fill="var(--accent-strong)"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">מסרים קשים ותקשורת בשינוי</h1>
+    </div>
+    <p class="slide-body">כשצריך למסור בשורה קשה — שינוי ארגוני, החלטה לא פופולרית, ביקורת — הנטייה היא לרכך, לעמעם או לדחות. זו טעות. שקיפות מוקדמת וישירה, גם כשהתוכן לא נעים, בונה חוסן ואמון בצוות. עמימות יוצרת חלל שהחרדה ממלאת.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">אמור את העיקר בהתחלה — אל תקבור אותו בסוף</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">הסבר את ה"למה" — אנשים סופגים החלטות קשות כשהן הגיוניות</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">תן מקום לרגשות — הכר בהם במקום למהר לפתור</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-4"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 6 — לפני התרגול -->
+  <div class="card" id="slide-5">
+    <div class="tag">לפני התרגול</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <rect x="18" y="16" width="44" height="48" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M28 28l3 3 5-6M28 42l3 3 5-6M28 56l3 3 5-6" class="ok" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M44 29h12M44 43h12M44 57h10" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">עכשיו נתרגל בתרחישים אמיתיים</h1>
+    </div>
+    <p class="slide-body">למדת את ארבעת הכלים המרכזיים: הקשבה פעילה, משוב לפי SBI, מעבר מעמדות לאינטרסים בקונפליקט, ותקשורת ישירה במשבר. שתי השאלות הבאות מציגות מצבים שכל מנהל צוות פוגש. אין כאן "מבחן" — המטרה היא לתרגל את שיקול הדעת שלך ולקבל משוב.</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">קרא כל תרחיש כאילו הוא קורה לך מחר בבוקר</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">בחר את התגובה שהיית באמת בוחר — לא את ה"נכונה תיאורטית"</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">קרא את המשוב גם כשצדקת — יש בו ניואנס נוסף</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-5"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="go(1)">
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 7 — תרגול: משוב -->
+  <div class="card" id="slide-6">
+    <div class="tag">תרגול · מתן משוב</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="30" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M31 32c0-6 4-9 9-9s9 3 9 8-6 6-9 10v5" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="40" cy="55" r="2.6" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">חבר צוות מגיע שוב באיחור לפגישות. איך אתה נותן משוב?</h1>
+    </div>
+    <p class="slide-body">בחר את התגובה האפקטיבית ביותר. תוכל להמשיך לאחר שתענה.</p>
+    <div class="quiz-options">
+      <button class="quiz-option" data-correct="false" onclick="answer(this)">
+        <span class="quiz-marker">א</span>
+        <span>"אתה תמיד מאחר, זה לא מקצועי" — כדי שיבין שזה רציני</span>
+      </button>
+      <button class="quiz-option" data-correct="true" onclick="answer(this)">
+        <span class="quiz-marker">ב</span>
+        <span>"בשלוש הפגישות האחרונות הגעת ב-10 דקות איחור, ונאלצנו לחזור על עצמנו. מה קורה?"</span>
+      </button>
+      <button class="quiz-option" data-correct="false" onclick="answer(this)">
+        <span class="quiz-marker">ג</span>
+        <span>לא אומר כלום ומקווה שזה יסתדר מעצמו</span>
+      </button>
+    </div>
+    <div class="quiz-feedback"
+         data-correct-msg="נכון! זה בדיוק מודל SBI — מצב ספציפי (שלוש פגישות), התנהגות מדידה (10 דקות איחור), והשפעה (חזרה על עצמנו). והשאלה הפתוחה בסוף מזמינה דיאלוג במקום התגוננות."
+         data-wrong-msg="לא אפקטיבי. תווית כמו 'תמיד' ו'לא מקצועי' תוקפת את האדם ומייצרת התגוננות; והתעלמות משדרת שההתנהגות מקובלת. התשובה הנכונה: תאר מצב ספציפי, התנהגות והשפעה, וסיים בשאלה פתוחה (SBI)."></div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-6"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next quiz-next" onclick="go(1)" disabled>
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 8 — תרגול: קונפליקט -->
+  <div class="card" id="slide-7">
+    <div class="tag">תרגול · פתרון קונפליקט</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <circle cx="30" cy="32" r="9" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <circle cx="50" cy="32" r="9" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M40 44v-4" class="accent-strong" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M22 60c2-6 7-9 18-9s16 3 18 9" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">שני עובדים בצוות רבים על מי אחראי למשימה שנפלה. מה הצעד הראשון שלך?</h1>
+    </div>
+    <p class="slide-body">בחר את התגובה האפקטיבית ביותר. תוכל להמשיך לאחר שתענה.</p>
+    <div class="quiz-options">
+      <button class="quiz-option" data-correct="false" onclick="answer(this)">
+        <span class="quiz-marker">א</span>
+        <span>מכריע מיד מי צודק כדי לסגור את זה מהר</span>
+      </button>
+      <button class="quiz-option" data-correct="false" onclick="answer(this)">
+        <span class="quiz-marker">ב</span>
+        <span>מבקש משניהם להסתדר לבד — זו לא בעיה שלי</span>
+      </button>
+      <button class="quiz-option" data-correct="true" onclick="answer(this)">
+        <span class="quiz-marker">ג</span>
+        <span>נפגש עם כל אחד בנפרד, מבין מה חשוב לו באמת, ואז מפגיש סביב אינטרס משותף</span>
+      </button>
+    </div>
+    <div class="quiz-feedback"
+         data-correct-msg="נכון! הצעד הראשון הוא להבין את האינטרסים מאחורי העמדות, לא להכריע מי צודק. משם אפשר להפגיש את השניים סביב מטרה משותפת — למנוע שהמשימה תיפול שוב — במקום להאשים על העבר."
+         data-wrong-msg="פחות אפקטיבי. הכרעה מהירה יוצרת מפסיד שנושא טינה, והתעלמות משדרת שלמנהל לא אכפת. התשובה הנכונה: הבן קודם מה חשוב לכל צד (האינטרסים), ואז הפגש אותם סביב פתרון משותף."></div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-7"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next quiz-next" onclick="go(1)" disabled>
+          הבא
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- שקופית 9 — סיום -->
+  <div class="card summary-card" id="slide-8">
+    <div class="tag">סיכום</div>
+    <div class="hero-row">
+      <div class="visual">
+        <svg viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="30" fill="var(--correct-bg)" stroke="var(--correct-border)" stroke-width="1.6"/>
+          <path d="M28 41l9 9 15-19" class="ok" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="slide-title">כל הכבוד — סיימת את המודול!</h1>
+    </div>
+    <p class="slide-body">תקשורת טובה היא שריר שמתחזק בתרגול. בכל שיחה עם הצוות יש לך הזדמנות ליישם כלי אחד מהמודול. הנה ארבעת הדברים שכדאי לקחת איתך:</p>
+    <div class="points">
+      <div class="point"><div class="point-dot"></div><span class="point-text">הקשב כדי להבין — שקף, שאל, ואל תמהר להשיב</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">משוב לפי SBI — מצב, התנהגות, השפעה. עובדות, לא תוויות</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">בקונפליקט — עבור מעמדות לאינטרסים וחפש win-win</span></div>
+      <div class="point"><div class="point-dot"></div><span class="point-text">במשבר — שקיפות מוקדמת, הסבר את ה"למה", ותן מקום לרגש</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="nav-row">
+      <div class="dots" id="dots-8"></div>
+      <div class="btn-group">
+        <button class="btn-back" onclick="go(-1)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          חזרה
+        </button>
+        <button class="btn-next" onclick="restart()">
+          התחל מחדש
+          <svg viewBox="0 0 16 16" fill="none"><path d="M13 8a5 5 0 1 1-1.5-3.5M12 2v3h-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="end-note" id="end-note">סיימת את המודול הזה.</div>
+
+<script>
+  const TOTAL = 9;
+  let current = 0;
+
+  /* ===== מתג יום/לילה ===== */
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('mgr-comm-theme', theme); } catch (e) {}
+  }
+  function toggleTheme() {
+    const now = document.documentElement.getAttribute('data-theme');
+    applyTheme(now === 'night' ? 'day' : 'night');
+  }
+  (function initTheme() {
+    let saved = null;
+    try { saved = localStorage.getItem('mgr-comm-theme'); } catch (e) {}
+    if (saved) { applyTheme(saved); return; }
+    // ברירת מחדל: מצב יום (קרם), אלא אם המערכת מבקשת מצב כהה
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark ? 'night' : 'day');
+  })();
+
+  function renderDots(slideIndex) {
+    const container = document.getElementById('dots-' + slideIndex);
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < TOTAL; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      if (i === slideIndex) {
+        d.style.width = '22px';
+        d.style.background = 'var(--dot-active)';
+      } else if (i < slideIndex) {
+        d.style.width = '6px';
+        d.style.background = 'var(--dot-done)';
+      } else {
+        d.style.width = '6px';
+        d.style.background = 'var(--dot-todo)';
+      }
+      container.appendChild(d);
+    }
+  }
+
+  function go(dir) {
+    const next = current + dir;
+    if (next < 0 || next >= TOTAL) return;
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = next;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + TOTAL;
+    document.getElementById('end-note').classList.toggle('visible', current === TOTAL - 1);
+    renderDots(current);
+    if (current === TOTAL - 1) notifyComplete();
+  }
+
+  // איתות סיום ל-Storyline (Web Object) — ניתן ללכידה עם JavaScript trigger בקורס
+  function notifyComplete() {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'course-complete', unit: 'managers-communication' }, '*');
+      }
+    } catch (e) {}
+  }
+
+  function restart() {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = 0;
+    document.getElementById('slide-0').classList.add('active');
+    document.getElementById('counter').textContent = '1 / ' + TOTAL;
+    document.getElementById('end-note').classList.remove('visible');
+    resetAllQuizzes();
+    renderDots(0);
+  }
+
+  function answer(el) {
+    const card = el.closest('.card');
+    const isCorrect = el.getAttribute('data-correct') === 'true';
+    const opts = card.querySelectorAll('.quiz-option');
+    opts.forEach(o => {
+      o.classList.add('answered');
+      o.disabled = true;
+      if (o !== el) o.classList.add('dimmed');
+    });
+    const marker = el.querySelector('.quiz-marker');
+    if (isCorrect) {
+      el.classList.add('correct');
+      el.classList.remove('dimmed');
+      marker.innerHTML = '<svg viewBox="0 0 16 16" fill="none"><path d="M4 8.5L7 11.5L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else {
+      el.classList.add('wrong');
+      marker.innerHTML = '<svg viewBox="0 0 16 16" fill="none"><path d="M5 5L11 11M11 5L5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+      opts.forEach(o => {
+        if (o.getAttribute('data-correct') === 'true') {
+          o.classList.add('correct');
+          o.classList.remove('dimmed');
+        }
+      });
+    }
+    const feedback = card.querySelector('.quiz-feedback');
+    if (isCorrect) {
+      feedback.textContent = feedback.getAttribute('data-correct-msg');
+      feedback.classList.remove('wrong');
+    } else {
+      feedback.textContent = feedback.getAttribute('data-wrong-msg');
+      feedback.classList.add('wrong');
+    }
+    feedback.classList.add('visible');
+    card.querySelector('.quiz-next').disabled = false;
+  }
+
+  function resetAllQuizzes() {
+    const markers = ['א', 'ב', 'ג'];
+    document.querySelectorAll('.quiz-options').forEach(group => {
+      group.querySelectorAll('.quiz-option').forEach((o, i) => {
+        o.classList.remove('answered', 'dimmed', 'correct', 'wrong');
+        o.disabled = false;
+        o.querySelector('.quiz-marker').textContent = markers[i];
+      });
+    });
+    document.querySelectorAll('.quiz-feedback').forEach(f => { f.classList.remove('visible', 'wrong'); f.textContent = ''; });
+    document.querySelectorAll('.quiz-next').forEach(b => b.disabled = true);
+  }
+
+  for (let i = 0; i < TOTAL; i++) renderDots(i);
+</script>
+</body>
+</html>

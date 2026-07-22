@@ -117,7 +117,7 @@ nav a:hover {
 }
 
 #אודות {
-  background: #111827;
+  background: #1f2937;
   padding: 5rem 2rem;
 }
 
@@ -148,9 +148,9 @@ nav a:hover {
 }
 
 .about-inner p {
-  color: rgba(255, 255, 255, 0.6);
-  line-height: 1.8;
-  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.85;
+  font-size: 0.95rem;
   margin-bottom: 1rem;
 }
 
@@ -161,13 +161,14 @@ nav a:hover {
 }
 
 .skill-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   padding: 0.9rem 1.2rem;
   display: flex;
   align-items: center;
   gap: 1rem;
+  min-height: 88px;
 }
 
 .skill-icon {
@@ -181,7 +182,7 @@ nav a:hover {
 }
 
 .skill-desc {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.78rem;
   margin-top: 0.15rem;
 }
@@ -364,7 +365,7 @@ footer {
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
-  
+
   .hero h1 {
     font-size: 2.2rem;
   }

@@ -112,7 +112,7 @@ nav a:hover {
 
 .stat-label {
   font-size: 0.82rem;
-  color: #9ca3af;
+  color: #6b7280;
   margin-top: 0.35rem;
 }
 
@@ -337,7 +337,7 @@ nav a:hover {
 
 .duration {
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .demo-link {
@@ -353,7 +353,7 @@ nav a:hover {
 }
 
 .demo-link.coming-soon {
-  color: #9ca3af;
+  color: #6b7280;
   cursor: default;
 }
 
@@ -375,6 +375,13 @@ footer {
   font-size: 0.9rem;
   color: #666;
   text-align: right;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 

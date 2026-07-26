@@ -385,25 +385,41 @@ button:focus-visible {
 }
 
 .site-footer {
-  display: flex-start;
+  display: flex;
   flex-direction: column;
   gap: 14px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding-top: 19px;
-  border-top: 1px solid var(--line);
-  color: #dbeafe;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .site-footer p {
   margin: 0;
-  color: var(--muted);
-
-  font-family: var(--font-mono);
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'Rubik', sans-serif;
   font-size: 0.66rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.social-link i {
+  color: #dbeafe;          /* תכלת בהיר על הרקע הכהה */
+  font-size: 1.15rem;
+  transition: color 0.2s;
+}
+
+.social-link:hover i {
+  color: #2563eb;          /* הדגשה בכחול בריחוף */
+}
+
 
 
 @media (max-width: 720px) {

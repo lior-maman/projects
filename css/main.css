@@ -16,6 +16,11 @@ body {
   min-height: 100vh;
 }
 
+/* English edition (LTR) — flips direction and text alignment. */
+body:lang(en) { direction: ltr; }
+body:lang(en) .hero,
+body:lang(en) .viewing-note { text-align: left; }
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -54,6 +59,20 @@ nav a {
 
 nav a:hover {
   color: #2563eb;
+}
+
+/* Language switch pill (used on both editions) */
+.lang-switch {
+  color: #2563eb !important;
+  background: #dbeafe;
+  border-radius: 100px;
+  padding: 0.35rem 1rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+.lang-switch:hover {
+  background: #2563eb;
+  color: #fff !important;
 }
 
 .hero {
@@ -116,7 +135,9 @@ nav a:hover {
   margin-top: 0.35rem;
 }
 
-#אודות {
+/* About section — Hebrew id (#אודות) + English id (#about) share one rule */
+#אודות,
+#about {
   background: #1f2937;
   padding: 5rem 2rem;
 }
@@ -187,7 +208,9 @@ nav a:hover {
   margin-top: 0.15rem;
 }
 
-#פרויקטים {
+/* Projects section — Hebrew id (#פרויקטים) + English id (#projects) share one rule */
+#פרויקטים,
+#projects {
   padding: 5rem 2rem;
   max-width: 1080px;
   margin: 0 auto;
@@ -269,6 +292,7 @@ nav a:hover {
   transform: scale(1.04);
 }
 
+/* Tool badge — bottom-right in RTL, flip to bottom-left in the English (LTR) edition */
 .tool-badge {
   position: absolute;
   bottom: 0.7rem;
@@ -279,6 +303,7 @@ nav a:hover {
   padding: 0.25rem 0.65rem;
   border-radius: 6px;
 }
+body:lang(en) .tool-badge { right: auto; left: 0.7rem; }
 
 .tool-storyline {
   background: #1e40af;   /* כחול כהה — Storyline */

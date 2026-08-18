@@ -428,6 +428,18 @@ button:focus-visible {
   text-transform: uppercase;
 }
 
+.lang-switch {
+  font-family: 'Rubik', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2563eb;
+  background: #dbeafe;
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.lang-switch:hover { background: #2563eb; color: #fff; }
 
 .social-links {
   display: flex;

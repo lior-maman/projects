@@ -456,7 +456,14 @@ button:focus-visible {
 .social-link:hover i {
   color: #2563eb;          /* הדגשה בכחול בריחוף */
 }
+.skill-tool-title a {
+  color: #93c5fd !important;
+  text-decoration: none;
+}
 
+.skill-tool-title a:hover {
+  color: #bfdbfe !important;
+}
 
 
 @media (max-width: 720px) {
